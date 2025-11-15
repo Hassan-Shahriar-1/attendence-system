@@ -28,7 +28,10 @@ class StudentController extends Controller
         return ApiResponseHelper::successResponse(new StudentResource($student));
     }
     public function update() {}
-    public function show(Student $student) {}
+    public function show(Student $student)
+    {
+        return ApiResponseHelper::successResponse(new StudentResource($student));
+    }
     public function destroy(Student $student)
     {
         $student->delete();

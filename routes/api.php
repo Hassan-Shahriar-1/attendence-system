@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Grade\GradeController;
 use App\Http\Controllers\Section\SectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,4 +14,5 @@ Route::get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('sections', SectionController::class)->except('show');
+    Route::apiResource('grades', GradeController::class)->except('show');
 });

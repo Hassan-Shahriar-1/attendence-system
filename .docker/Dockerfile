@@ -9,11 +9,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip-dev \
     libicu-dev \
     zip unzip \
+    libpq-dev \
     default-mysql-client \
     gnupg \
     wget \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql pcntl zip gd intl \
+    && docker-php-ext-install pdo_mysql pdo_pgsql pcntl zip gd intl \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*

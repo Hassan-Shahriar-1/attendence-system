@@ -36,7 +36,6 @@ class Student extends Model
             if (!$this->image) {
                 return null;
             }
-
             return Storage::disk(config('filesystems.default'))->url($this->image);
         });
     }

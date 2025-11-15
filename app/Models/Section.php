@@ -12,10 +12,7 @@ class Section extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'grade_id'
-    ];
+    protected $fillable = ['name'];
 
     public function grade(): BelongsToMany
     {

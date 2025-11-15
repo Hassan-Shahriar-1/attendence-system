@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\CreateStudentRequest;
+use App\Http\Requests\Student\UpdateStudentRequest;
 use App\Http\Resources\Student\StudentResource;
 use App\Models\Student;
 use App\Services\StudentService;
@@ -27,11 +28,19 @@ class StudentController extends Controller
         $student = $this->studentService->createStudentData($validatedData);
         return ApiResponseHelper::successResponse(new StudentResource($student));
     }
-    public function update() {}
+
+    public function update(UpdateStudentRequest $request, Student $student)
+    {
+        $updateData = $request->validated();
+        $updateStudent = $this->studentService->updateStudentData($student, $updateData);
+        return ApiResponseHelper::successResponse(new StudentResource($updateStudent));
+    }
+
     public function show(Student $student)
     {
         return ApiResponseHelper::successResponse(new StudentResource($student));
     }
+
     public function destroy(Student $student)
     {
         $student->delete();

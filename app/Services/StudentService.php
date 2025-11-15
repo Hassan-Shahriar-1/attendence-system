@@ -19,6 +19,16 @@ class StudentService
         return Student::create($validatedData);
     }
 
+    public function updateStudentData(Student $student, array $updateData)
+    {
+        if (isset($updateData['photo']) && $updateData['photo']) {
+            $this->deleteOne($student->image, config('filesystems.default'));
+            $updateData['image'] = $this->uploadOne($updateData['photo'], 'student', config('filesystems.default'));
+        }
+        $student->update($updateData);
+        return $student->refresh();
+    }
+
     protected function generateStudentId()
     {
         // Get the last student ID

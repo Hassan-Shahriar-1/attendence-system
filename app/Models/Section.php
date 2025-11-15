@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -11,12 +12,16 @@ class Section extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'grade_id'];
+    protected $fillable = [
+        'name',
+        'grade_id'
+    ];
 
-    public function grade(): BelongsTo
+    public function grade(): BelongsToMany
     {
-        return $this->belongsTo(Grade::class, 'grade_id');
+        return $this->belongsToMany(Grade::class, 'grade_section');
     }
+
     public function students(): HasMany
     {
         return $this->hasMany(Student::class, 'section_id');

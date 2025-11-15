@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Student;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Student\CreateStudentRequest;
 use App\Http\Resources\Student\StudentResource;
 use App\Models\Student;
-use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -18,7 +18,10 @@ class StudentController extends Controller
         return ApiResponseHelper::successResponse(StudentResource::collection($students), true);
     }
 
-    public function store() {}
+    public function store(CreateStudentRequest $request)
+    {
+        $validatedData = $request->validated();
+    }
     public function update() {}
     public function show(Student $student) {}
     public function destroy(Student $student)

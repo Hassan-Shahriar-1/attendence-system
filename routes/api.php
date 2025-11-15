@@ -12,5 +12,5 @@ Route::get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::apiResource('sections', SectionController::class);
+    Route::apiResource('sections', SectionController::class)->except('show');
 });

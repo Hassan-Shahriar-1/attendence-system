@@ -17,7 +17,8 @@ class SectionOverviewResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'grade' => $this->grade?->name
+            'grades_count' => $this->grades_count,
+            'students_count' => $this->students_count
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Section;
 
+use App\Rules\SectionNameRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSection extends FormRequest
@@ -11,7 +12,7 @@ class UpdateSection extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,7 @@ class UpdateSection extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', new SectionNameRule]
         ];
     }
 }

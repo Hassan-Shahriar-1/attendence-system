@@ -10,7 +10,6 @@ use App\Http\Resources\Section\SectionOverviewResource;
 use App\Models\Section;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SectionController extends Controller
@@ -18,7 +17,8 @@ class SectionController extends Controller
     public function index(): JsonResponse
     {
         $sections = Section::query()
-            ->with(['grade'])
+            ->withCount('grades')
+            ->withCount('students')
             ->paginate(request('per_page', 10));
         return ApiResponseHelper::successResponse(SectionOverviewResource::collection($sections), true);
     }
@@ -33,10 +33,13 @@ class SectionController extends Controller
     public function update(Section $section, UpdateSection $request)
     {
         $updateData = $request->validated();
+        $section->update($updateData);
+        return ApiResponseHelper::successResponse($section->fresh());
     }
 
     public function destroy(Section $section)
     {
+        $this->authorize('delete', $section);
         DB::beginTransaction();
         try {
             $section->grades()->detach();

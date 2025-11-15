@@ -7,9 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\CreateStudentRequest;
 use App\Http\Resources\Student\StudentResource;
 use App\Models\Student;
+use App\Services\StudentService;
 
 class StudentController extends Controller
 {
+    public function __construct(public StudentService $studentService) {}
+
     public function index()
     {
         $students = Student::query()
@@ -21,6 +24,8 @@ class StudentController extends Controller
     public function store(CreateStudentRequest $request)
     {
         $validatedData = $request->validated();
+        $student = $this->studentService->createStudentData($validatedData);
+        return ApiResponseHelper::successResponse(new StudentResource($student));
     }
     public function update() {}
     public function show(Student $student) {}

@@ -23,9 +23,9 @@ class CreateStudentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'grade_id' => ['required', 'exists:graders,id'],
+            'grade_id' => ['required', 'exists:grades,id'],
             'section_id' => ['required', 'exists:sections,id'],
-            'photo' => ['sometimes', 'nullable', 'file', 'mimetypes:jpeg,jpg,png']
+            'photo' => ['nullable', 'file', 'mimes:jpeg,jpg,png']
         ];
     }
 }

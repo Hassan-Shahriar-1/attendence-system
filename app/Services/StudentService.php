@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Student;
 use App\Traits\FileUpload;
 
 class StudentService
@@ -10,7 +11,27 @@ class StudentService
 
     public function createStudentData(array $validatedData)
     {
-        if (isset($validatedData['image']) && $validatedData['image']) {
+        if (isset($validatedData['photo']) && $validatedData['photo']) {
+            $validatedData['image'] = $this->uploadOne($validatedData['photo'], 'student', config('filesystems.default'));
         }
+        $validatedData['student_id'] = $this->generateStudentId();
+
+        return Student::create($validatedData);
+    }
+
+    protected function generateStudentId()
+    {
+        // Get the last student ID
+        $lastStudent = Student::orderBy('id', 'desc')->first();
+
+        if (!$lastStudent || !$lastStudent->student_id) {
+            return 'S001';
+        }
+
+        $number = (int) str_replace('S', '', $lastStudent->student_id);
+        $number++;
+
+        // Format with leading zeros
+        return 'S' . str_pad($number, 3, '0', STR_PAD_LEFT);
     }
 }

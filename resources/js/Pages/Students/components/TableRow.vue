@@ -1,14 +1,11 @@
 <template>
-      <div class="table-row tr">
+      <div class="table-row tr pl-2 w-full">
         <div class="td w-[20%]">{{ student.student_id }}</div>
         <div class="td w-[30%]">
             <div class="flex items-center gap-2">
-                <img
-                    :src="student.image_url ?? defaultImage"
-                    alt="Student Image"
-                    class="w-10 h-10 rounded-full object-cover"
-                />
-                <span>{{ student.name }}</span>
+                <img :src="student.photo ? student.photo : defaultImage" alt="student photo" class="w-8 h-8 rounded-full object-cover" />
+                    
+                {{ student.name }}
             </div>
         </div>
         <div class="td w-[25%]">{{ student.grade }}</div>

@@ -8,30 +8,25 @@
       headerClass=""
       headerTopClass="!py-0 !border-t-0"
       placeholder="Search here..."
-    >
-      <template #filters>
-    </template>
-    <template #overview-top-left>
-        </template>
-        <template #overview-top-right>
-        </template>
+    >    
+    
         <template #header>
-        <TableSortColumn
-            v-for="column in columns"
-            :key="column.columnName"
-            :label="column.label"
-            :column-name="column.columnName"
-            :enable="column.enableSort"
-            :class="column.class"   
+            <TableSortColumn
+                v-for="column in columns"
+                :key="column.columnName"
+                :label="column.label"
+                :column-name="column.columnName"
+                :enable="column.enableSort"
+                :class="column.class"   
             />           
         </template>
+
       <template #body>
         <TableRow
             v-for="student in rows"
             :key="student.id"
             :student="student"
         />
-       
       </template>
 
 	</TableOverviewTableScroll>

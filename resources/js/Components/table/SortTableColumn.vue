@@ -1,5 +1,5 @@
 <template>
-  <div class="sort flex items-center">
+  <div class="sort flex items-center pl-2">
     {{ label != ''? label : '' }}
     <span v-if="enable" @click="sort">
     </span>

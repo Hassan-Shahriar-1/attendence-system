@@ -19,5 +19,19 @@ class AttendanceController extends Controller
         return ApiResponseHelper::successResponse([], false, 'completed');
     }
 
-    public function getMonthlyAttendanceReport(Request $request) {}
+    public function getMonthlyAttendanceReport(Request $request)
+    {
+        $request->validate([
+            'date' => ['required', 'date_format:Y-m-d'],
+            'grade_id' => ['required', 'exists:grades,id']
+        ]);
+        $report = $this->attendanceService->getMonthlyReport($request->grade_id, $request->date);
+        return ApiResponseHelper::successResponse($report);
+    }
+
+    public function getTodayAttendanceReport()
+    {
+        $todayReport = $this->attendanceService->dateWiseReport(today());
+        return ApiResponseHelper::successResponse($todayReport);
+    }
 }

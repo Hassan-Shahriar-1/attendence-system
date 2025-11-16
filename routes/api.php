@@ -19,4 +19,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('grades', GradeController::class)->except('show');
     Route::apiResource('students', StudentController::class);
     Route::post('bulk-attendance', [AttendanceController::class, 'bulkAttendance']);
+    Route::get('get-monthly-report', [AttendanceController::class, 'getMonthlyAttendanceReport']);
+    Route::get('today-report', [AttendanceController::class, 'getTodayAttendanceReport']);
 });

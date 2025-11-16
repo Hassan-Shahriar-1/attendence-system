@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Events\AttendanceBulkRecorded;
+use App\Models\Student;
 
 class AttendanceService
 {
@@ -75,5 +76,39 @@ class AttendanceService
                 ->pluck('count', 'status')
                 ->toArray();
         });
+    }
+
+    public function dateWiseReport(string $date)
+    {
+        $totalStudents = Student::count();
+
+        $attendanceStats = \App\Models\Attendance::selectRaw("
+            COUNT(*) FILTER (WHERE status = 'present' OR status = 'late') AS present_count,
+            COUNT(*) FILTER (WHERE status = 'late') AS late_count,
+            COUNT(*) FILTER (WHERE status = 'absent') AS absent_count
+        ")
+            ->whereDate('date', $date)
+            ->first();
+
+        $presentCount = $attendanceStats->present_count ?? 0; // includes late
+        $lateCount = $attendanceStats->late_count ?? 0;
+        $absentCount = $attendanceStats->absent_count ?? 0;
+
+        return [
+            'date' => $date,
+            'total_students' => $totalStudents,
+            'present' => [
+                'count' => $presentCount,
+                'percentage' => $totalStudents ? round($presentCount / $totalStudents * 100, 2) : 0
+            ],
+            'late' => [
+                'count' => $lateCount,
+                'percentage' => $totalStudents ? round($lateCount / $totalStudents * 100, 2) : 0
+            ],
+            'absent' => [
+                'count' => $absentCount,
+                'percentage' => $totalStudents ? round($absentCount / $totalStudents * 100, 2) : 0
+            ],
+        ];
     }
 }

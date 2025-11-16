@@ -39,7 +39,7 @@
 <script setup>
             import { reactive, ref } from 'vue';
             import { useRouter } from 'vue-router';
-            import axios from 'axios';
+            import axios from '@/axios';
             import { UserStore } from '../stores/UserStore';
             const form = reactive({
               email: '',
@@ -56,7 +56,7 @@
               error.value = '';
 
               try {
-                const response = await axios.post('/api/login', form);
+                const response = await axios.post('/login', form);
                 
                 authStore.setUser(response.data.data.user);
                 authStore.setToken(response.data.data.token);

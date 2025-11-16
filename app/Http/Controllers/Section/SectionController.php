@@ -51,4 +51,13 @@ class SectionController extends Controller
             return ApiResponseHelper::serverError($e);
         }
     }
+
+    public function getSectionsByGrade($gradeId): JsonResponse
+    {
+        $sections = Section::select('id', 'name')
+            ->whereHas('grades', function ($query) use ($gradeId) {
+                $query->where('grades.id', $gradeId);
+            })->get();
+        return ApiResponseHelper::successResponse($sections);
+    }
 }

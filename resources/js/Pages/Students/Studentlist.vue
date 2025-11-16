@@ -11,7 +11,7 @@
 		headerTopClass=""
 		headerClass=""
 		bodyClass=""
-		searchPlaceholder="Search by abilities name"
+		searchPlaceholder="Search by student & Grade name"
 		@refetch="loadStudents()"
 	>
 		<template #filter>

@@ -47,4 +47,12 @@ class StudentController extends Controller
         $student->delete();
         return ApiResponseHelper::successResponse([], false, 'deleted');
     }
+
+    public function getStudentsByGradeSection($gradeId, $sectionId)
+    {
+        $students = Student::where('grade_id', $gradeId)
+            ->where('section_id', $sectionId)
+            ->get();
+        return ApiResponseHelper::successResponse(StudentResource::collection($students));
+    }
 }

@@ -5,7 +5,7 @@ const Dashboard = () => import("../Pages/Dashboard.vue");
 const NotFound = () => import("../Pages/NotFound.vue"); // 404 page
 const AuthenticatedLayout = () => import("../Layouts/AuthenticatedLayout.vue");
 const Studentlist = () => import("../Pages/Students/Studentlist.vue");
-
+const Attendance = () => import("../Pages/Attendance/AttendanceList.vue");
 
 const routes = [
     {
@@ -35,7 +35,7 @@ const routes = [
             },
             {
                 path: "attendance",
-                component:  Dashboard,
+                component:  Attendance,
                 name: "Attendance",
                 meta: {
                 requiresAuth: true,

@@ -17,10 +17,11 @@ copy .env.example to .env file
    cd attendence-system
    ```
 2. Build and run the Docker containers:
-   ```bash
-   docker compose up --build -d
-  ```
-  # After containers are up, run the following:
+    ```bash
+    docker compose up --build -d
+    ```
+
+### After containers are up, run the following:
   
   # Enter PHP container and install PHP dependencies
   docker compose exec -it php /bin/bash

@@ -22,22 +22,23 @@ copy .env.example to .env file
     ```
 
 ### After containers are up, run the following:
+  ```bash
   
-  # Enter PHP container and install PHP dependencies
-  docker compose exec -it php /bin/bash
-  composer install
-  exit
-  
-  # Install Node dependencies
-  docker compose run --rm node npm i
-  
-  # Clear and optimize Laravel
-  docker compose exec -it php /bin/bash
-  php artisan optimize:clear
-  php artisan key:generate
-  php artisan migrate:fresh --seed
-  exit
-    ```
+    # Enter PHP container and install PHP dependencies
+    docker compose exec -it php /bin/bash
+    composer install
+    exit
+    
+    # Install Node dependencies
+    docker compose run --rm node npm i
+    
+    # Clear and optimize Laravel
+    docker compose exec -it php /bin/bash
+    php artisan optimize:clear
+    php artisan key:generate
+    php artisan migrate:fresh --seed
+    exit
+```
 
 
 ### Usage

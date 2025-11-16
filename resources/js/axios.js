@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { useToast } from 'vue-toastification';
-import { startLoading, stopLoading } from '@/globalLoader';
-
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
   'Access-Control-Allow-Origin': '*',
@@ -17,11 +16,9 @@ axios.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    startLoading(); // Start loader before making the request
     return config;
   },
   (error) => {
-    stopLoading(); // Stop loader if request fails
     return Promise.reject(error);
   }
 );
@@ -29,19 +26,18 @@ axios.interceptors.request.use(
 // Response Interceptor
 axios.interceptors.response.use(
   (response) => {
-    stopLoading(); // Stop loader after a successful response
     return response;
   },
   (error) => {
-    stopLoading(); // Stop loader after an error response
 
     const currentRoute = window.location.pathname;
     if (error.response && [401].includes(error.response.status) && currentRoute !== '/login') {
       localStorage.removeItem('token');
-      const toast = useToast();
-      toast.error(error.response.data.message, {
+      const toast = toast();
+      toast.error('Your session has expired. Please log in again.', {
         position: 'bottom-center',
       });
+   
       return (window.location = '/login');
     }
 

@@ -8,13 +8,20 @@ const routes = [
     {
         path: "/",
         name: "Dashboard",
-        component: () => Dashboard(),
+        component: Dashboard,           // use the lazy loader function directly
+        meta: { requiresAuth: true },   // mark as protected
     },
-     {
-        path: '/:pathMatch(.*)*', // matches any route not defined above
-        name: 'NotFound',
-        component: () => NotFound(),
-    }
+    {
+        path: "/login",
+        name: "login",
+        component: () => import("../Pages/Login.vue"), // add a login route (create file if missing)
+        meta: { requiresAuth: false },
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "NotFound",
+        component: NotFound,
+    },
 ];
 const router = createRouter({
   history: createWebHistory(),

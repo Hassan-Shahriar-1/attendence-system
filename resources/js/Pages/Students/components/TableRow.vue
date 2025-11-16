@@ -1,27 +1,41 @@
 <template>
-      <div class="table-row tr pl-2 w-full">
-        <div class="td w-[20%]">{{ student.student_id }}</div>
-        <div class="td w-[30%]">
-            <div class="flex items-center gap-2">
-                <img :src="student.photo ? student.photo : defaultImage" alt="student photo" class="w-8 h-8 rounded-full object-cover" />
-                    
-                {{ student.name }}
-            </div>
-        </div>
-        <div class="td w-[25%]">{{ student.grade }}</div>
+    <tr v-for="student in students" :key="student.id" class="justify-between items-center flex min-h-[53px]">
+        <td class="td w-[20%] flex-shrink-0 px-2">{{ student.student_id }}</td>
 
-        <div class="td w-[25%]">{{ student.section }}</div>
-        
-    </div>
+        <!-- Name + Photo -->
+        <td class="td w-[30%] flex-shrink-0 flex items-center gap-2 px-2">
+        <img
+            :src="student.photo || defaultImage"
+            alt="student photo"
+            class="w-8 h-8 rounded-full object-cover flex-shrink-0"
+        />
+        <span class="truncate">{{ student.name }}</span>
+        </td>
+
+        <!-- Grade -->
+        <td class="td w-[25%] flex-shrink-0 px-2">{{ student.grade }}</td>
+
+        <!-- Section -->
+        <td class="td w-[25%] flex-shrink-0 px-2">{{ student.section }}</td>
+    </tr>
+  
 </template>
 
 <script setup>
 defineProps({
-    student: {
-        type: Object,
-        required: true,
-    },
+  students: {
+    type: Object,
+    required: true,
+  },
 });
 
-const defaultImage = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fplaceholder-person-student&psig=AOvVaw0ORgTuMpZkgqgp1Ai7JS_D&ust=1763378760422000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCPjf_vbH9pADFQAAAAAdAAAAABAE";
+const defaultImage =
+  "https://placehold.co/40x40?text=NA";
 </script>
+
+<style >
+
+.table-row:hover {
+  background-color: #f9f9f9;
+}
+</style>

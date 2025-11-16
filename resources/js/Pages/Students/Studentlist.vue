@@ -1,44 +1,61 @@
 <template>
-    <TableOverviewTableScroll
-	:search_enabled="true"
-      :footer_enabled="false"
-      :paginationData="meta"
-      class="!border-t-0 "
-      bodyClass=""
-      headerClass=""
-      headerTopClass="!py-0 !border-t-0"
-      placeholder="Search here..."
-    >    
-    
-        <template #header>
-            <TableSortColumn
-                v-for="column in columns"
-                :key="column.columnName"
-                :label="column.label"
-                :column-name="column.columnName"
-                :enable="column.enableSort"
-                :class="column.class"   
-            />           
-        </template>
+	<div class="text-[#3d3d3d] text-[32px] font-medium font-title leading-[38.40px]">
+		Student List
+	</div>
+	<OverviewTable
+		:filterEnabled="false"
+		:searchEnabled="true"
+		:paginationData="meta"
+		:loading="loading"
+		:showSelectAll="false"
+		headerTopClass=""
+		headerClass=""
+		bodyClass=""
+		searchPlaceholder="Search by abilities name"
+		@refetch="loadStudents()"
+	>
+		<template #filter>
+			
+		</template>
+		
 
-      <template #body>
-        <TableRow
-            v-for="student in rows"
-            :key="student.id"
-            :student="student"
-        />
-      </template>
+		<template #header>
+			<div v-for="column in columns" :key="column.columnName" :class="column.class">
+				<SortTableColumn
+					:label="column.label"
+					:columnName="column.columnName"
+					:enableSort="column.enableSort"
+				/>
+			</div>
+		</template>
 
-	</TableOverviewTableScroll>
+		<template #body>
+			<TableRow
+				v-if="rows.length > 0"
+				:students="rows"
+			/>
+			<template v-else>
+				<tr class="justify-center items-center flex">
+					<td
+						colspan="5"
+						class="text-center py-8 text-[#585755] text-sm font-normal"
+					>
+						No data found
+					</td>
+				</tr>
+			</template>
+		</template>
+	</OverviewTable>
+	
 </template>
 
 <script setup>
 import { ref, shallowRef, watch, reactive, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import OverviewTable from "../../Components/table/OverviewTable.vue";
-import TableOverviewTableScroll from "../../Components/table/OverviewTableScroll.vue";
+import OverviewTable from "@/Components/table/OverviewTable.vue";
+import OverviewTableFilter from "@/Components/table/OverviewTableFilter.vue";
+import SortTableColumn from "@/Components/table/SortTableColumn.vue";
 
-import TableSortColumn from "../../Components/table/SortTableColumn.vue";
 
 import axios from "@/axios";
 import TableRow from "./components/TableRow.vue";

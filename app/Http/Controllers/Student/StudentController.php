@@ -17,6 +17,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::query()
+            ->searchByName()
             ->with(['section', 'grade'])
             ->paginate(request('per_page', 10));
         return ApiResponseHelper::successResponse(StudentResource::collection($students), true);

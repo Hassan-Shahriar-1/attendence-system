@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Attendance;
 use App\Builders\StudentBuilder;
 use App\Observers\StudentObserver;
 use Database\Factories\StudentFactory;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
-use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 
 #[UseEloquentBuilder(StudentBuilder::class)]
 #[ObservedBy(StudentObserver::class)]
@@ -48,5 +50,10 @@ class Student extends Model
             }
             return Storage::disk(config('filesystems.default'))->url($this->image);
         });
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
     }
 }

@@ -56,6 +56,7 @@
                 </div>
             </div>
         </div>
+        <MonthlyReport/>
     </div>
 </template>
 <script setup>
@@ -63,6 +64,7 @@ import AvgRecipeCostDashboardIcon from "@/Components/icons/AvgRecipeCostDashboar
 import UsersDashboardIcon from "@/Components/icons/UsersDashboardIcon.vue";
 import GreenCogIcon from "@/Components/icons/GreenCogIcon.vue";
 import { ref, onMounted } from "vue";
+import MonthlyReport from "./MonthReport.vue";
 import axios from "@/axios";
 import { useRouter } from "vue-router";
 const router = useRouter();

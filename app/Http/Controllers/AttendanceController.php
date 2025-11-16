@@ -22,10 +22,10 @@ class AttendanceController extends Controller
     public function getMonthlyAttendanceReport(Request $request)
     {
         $request->validate([
-            'date' => ['required', 'date_format:Y-m-d'],
+            'month' => ['required', 'date_format:Y-m'], // YYYY-MM
             'grade_id' => ['required', 'exists:grades,id']
         ]);
-        $report = $this->attendanceService->getMonthlyReport($request->grade_id, $request->date);
+        $report = $this->attendanceService->getMonthlyReport($request->grade_id, $request->month);
         return ApiResponseHelper::successResponse($report);
     }
 

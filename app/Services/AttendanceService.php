@@ -50,22 +50,45 @@ class AttendanceService
     public function getMonthlyReport(int $gradeId, string $month)
     {
         $cacheKey = "attendance_report_{$gradeId}_{$month}";
-        Log::info('data', [Cache::get($cacheKey)]);
+
         return Cache::tags(['attendance'])->remember($cacheKey, 3600, function () use ($gradeId, $month) {
-            return Attendance::select(
-                'student_id',
-                'status',
-                DB::raw('COUNT(*) AS total')
-            )
-                ->whereHas('student', fn($q) => $q->where('grade_id', $gradeId))
-                ->whereMonth('date', date('m', strtotime($month)))
-                ->whereYear('date', date('Y', strtotime($month)))
-                ->groupBy('student_id', 'status')
-                ->orderBy('student_id')
-                ->get()
-                ->groupBy('student_id'); // group by student in PHP
+
+            $year = date('Y', strtotime($month));
+            $monthNum = date('m', strtotime($month));
+
+            $students = Student::with(['attendances' => fn($q) => $q->whereYear('date', $year)->whereMonth('date', $monthNum)])
+                ->where('grade_id', $gradeId)
+                ->get();
+
+            $monthlyData = $students->map(function ($student) {
+                $present = $student->attendances->where('status', 'present')->count();
+                $absent  = $student->attendances->where('status', 'absent')->count();
+                $late    = $student->attendances->where('status', 'late')->count();
+
+                return [
+                    'student_id' => $student->id,
+                    'name'       => $student->name,
+                    'class'      => $student->class,
+                    'section'    => $student->section,
+                    'present'    => $present,
+                    'absent'     => $absent,
+                    'late'       => $late,
+                ];
+            });
+
+            $totals = [
+                'present' => $monthlyData->sum('present'),
+                'absent'  => $monthlyData->sum('absent'),
+                'late'    => $monthlyData->sum('late'),
+            ];
+
+            return [
+                'monthlyData' => $monthlyData,
+                'totals'      => $totals
+            ];
         });
     }
+
 
     public function dateWiseReport(string $date)
     {

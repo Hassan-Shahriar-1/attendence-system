@@ -4,12 +4,14 @@
 			class="h-[36px] px-2 py-3 bg-white justify-start items-center gap-2.5 inline-flex cursor-pointer rounded-md outline outline-1 outline-offset-[-1px] outline-[#e0e2e5]"
 			@click="show = !show"
 		>
+			<IconsFilterIcon />
 			Filter
 		</div>
 		<div
 			v-if="show"
 			class="w-[385px] px-6 py-7 bg-white shadow flex-col justify-start items-start gap-6 inline-flex absolute top-[120%] left-0 z-10"
 		>
+			<IconsCrossIcon3 class="cursor-pointer absolute right-8" @click="show = false" />
 			<slot></slot>
 			<div class="self-stretch justify-end items-center gap-3.5 inline-flex">
 				<div class="min-w-[85px] h-[38px] p-4 bg-[#ededed] justify-center items-center gap-2.5 flex cursor-pointer" @click="resetFilters">

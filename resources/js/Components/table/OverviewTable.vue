@@ -52,7 +52,9 @@
 
 <script setup>
 import OverviewTableSearch from "./OverviewTableSearch.vue";
-import Pagination from "@/Components/pagination/Pagination.vue";
+
+// import Pagination from "@components/pagination/Pagination.vue";
+
 
 defineProps({
 	headerTopClass: {

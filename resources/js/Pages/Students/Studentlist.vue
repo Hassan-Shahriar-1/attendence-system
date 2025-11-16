@@ -1,9 +1,9 @@
 <template>
-    <OverviewTable
+    <TableOverviewTableScroll
 	:search_enabled="true"
       :footer_enabled="false"
-      :paginationData="data?.meta"
-      class="!border-t-0"
+      :paginationData="meta"
+      class="!border-t-0 "
       bodyClass=""
       headerClass=""
       headerTopClass="!py-0 !border-t-0"
@@ -16,54 +16,79 @@
         <template #overview-top-right>
         </template>
         <template #header>
-            <tr>
-            <th
-                v-for="column in columns"
-                :key="column.columnName"
-                :class="column.class"
-                class="text-left px-6 py-4 text-sm font-medium text-gray-900 bg-gray-50"
-            >
-                {{ column.label }}
-            </th>
-            </tr>
+        <TableSortColumn
+            v-for="column in columns"
+            :key="column.columnName"
+            :label="column.label"
+            :column-name="column.columnName"
+            :enable="column.enableSort"
+            :class="column.class"   
+            />           
         </template>
       <template #body>
         <TableRow
-          v-for="row in data?.data" :row="row"	:key="row.id"
+            v-for="student in rows"
+            :key="student.id"
+            :student="student"
         />
+       
       </template>
 
-	</OverviewTable>
+	</TableOverviewTableScroll>
 </template>
 
 <script setup>
-import { ref, shallowRef, defineAsyncComponent, watch, reactive } from "vue";
+import { ref, shallowRef, watch, reactive, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import OverviewTable from "@/Components/table/OverviewTable.vue";
+import OverviewTable from "../../Components/table/OverviewTable.vue";
+import TableOverviewTableScroll from "../../Components/table/OverviewTableScroll.vue";
+
+import TableSortColumn from "../../Components/table/SortTableColumn.vue";
+
 import axios from "@/axios";
 import TableRow from "./components/TableRow.vue";
 
 const loading = ref(false);
-const route = useRoute()
+const rows = ref([]);       // holds student list
+const route = useRoute();
+const meta = ref({});       // holds pagination meta data
 
 const columns = ref([
-	{ label: "Student Id", columnName: "student_id", enableSort: false, class: "w-[20%]" },
-	{ label: "Name", columnName: "name", enableSort: false, class: "w-[30%]" },
-	{ label: "Grade", columnName: "grade", enableSort: false, class: "w-[25%]" },
-	{ label: "Section", columnName: "section", enableSort: false, class: "w-[25%]" }
-]); 
+    { label: "Student Id", columnName: "student_id", enableSort: false, class: "w-[20%]" },
+    { label: "Name", columnName: "name", enableSort: false, class: "w-[30%]" },
+    { label: "Grade", columnName: "grade", enableSort: false, class: "w-[25%]" },
+    { label: "Section", columnName: "section", enableSort: false, class: "w-[25%]" },
+]);
 
-const queryParams = ref(route.query)
+const queryParams = ref(route.query);
 
-const {data} = await axios.get(`/students`, {
-    pick: ['data', 'meta'],
-    query: queryParams,
-})
+const loadStudents = async () => {
+    loading.value = true;
 
-console.log('data',data.data);
+    try {
+        const response = await axios.get("/students", {
+            params: queryParams.value,
+        });
 
+        rows.value = response.data.data;   // assign rows
+        meta.value = response.data.meta;   // assign meta
+        console.log("students:", rows.value);
+    } catch (error) {
+        console.error("error loading students", error);
+    } finally {
+        loading.value = false;
+    }
+};
 
-watch(() => route.query, (newVal, oldValue) => {
-    queryParams.value = newVal
-})
+onMounted(() => {
+    loadStudents();
+});
+
+watch(
+  () => route.query,
+  (newVal) => {
+    queryParams.value = newVal;
+    loadStudents();
+  }
+);
 </script>

@@ -1,69 +1,85 @@
 <template>
-	<th>
-		<div class="flex items-center text-left cursor-pointer text-white text-sm font-semibold leading-[16.80px]" @click="sort">
-			<template v-if="typeof label === 'object'">
-				{{ $t(label.text, label.replace) }}
-			</template>
-			<template v-else>
-				{{ $t(label) }}
-			</template>
-			<SortIcon v-if="enableSort" class="ms-[8px]" />
-		</div>
-	</th>
+  <div class="sort flex items-center">
+    {{ label != ''? label : '' }}
+    <span v-if="enable" @click="sort">
+    </span>
+  </div>
 </template>
 
-<script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import SortIcon from "@/components/icons/SortIcon.vue";
+<script>
+export default {
+  props: {
+    label: {
+      type: [String, Object],
+      required: true,
+    },
+    columnName: {
+      type: String,
+      required: true,
+    },
+    enable: {
+      type: Boolean,
+      default: true,
+    },
+    tooltip: {
+      type: Boolean,
+      default: false,
+    },
+    tooltipText: {
+      type: String,
+      default: "",
+    },
+  },
+  data() {
+    return {
+      direction: null,
+    };
+  },
+  created() {
+    const order_by = this.$route.query.order_by;
+    const direction = this.$route.query.direction;
+    if (this.columnName == order_by) this.direction = direction;
+  },
+  watch: {
+    direction(newValue, oldValue) {
+      const queries = this.$route.query;
+      delete queries.page;
+      const routeObj = {
+        params: { ...this.$route.params },
+        query: {
+          ...queries,
+          order_by: this.columnName,
+          direction: this.direction,
+        },
+      };
 
-const props = defineProps({
-	label: {
-		type: [String, Object],
-		required: true,
-	},
-	columnName: {
-		type: String,
-		required: true,
-	},
-	enableSort: {
-		type: Boolean,
-		default: true,
-	},
-});
+      this.$router.push(routeObj);
+    },
+  },
+  methods: {
+    sort() {
+      if (!this.enable) return;
 
-const direction = ref(null);
-const route = useRoute();
-const router = useRouter();
-
-onMounted(() => {
-	const order_by = route.query.order_by;
-	const directionQuery = route.query.direction;
-	if (props.columnName === order_by) {
-		direction.value = directionQuery;
-	}
-});
-
-const sort = () => {
-	if (!props.enableSort) return;
-
-	direction.value = direction.value === "ASC" ? "DESC" : "ASC";
+      const direction = this.direction ? this.direction : "DESC";
+      this.direction = direction.toUpperCase() == "ASC" ? "DESC" : "ASC";
+    },
+  },
 };
-
-watch(direction, (newValue) => {
-	const queries = { ...route.query };
-	delete queries.page;
-
-	const routeObj = {
-		name: route.name,
-		params: { ...route.params },
-		query: {
-			...queries,
-			order_by: props.columnName,
-			direction: newValue,
-		},
-	};
-
-	router.push(routeObj);
-});
 </script>
+
+<style lang="scss" scoped>
+.sort {
+  @apply px-6 py-3;
+
+	color: var(--Greyscale900, #151619);
+	font-family: Manrope;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 800;
+	line-height: 16px; /* 114.286% */
+  svg {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+}
+</style>

@@ -30,7 +30,7 @@ class StudentFactory extends Factory
 
     public function generateStudentId(): string
     {
-        $last = Student::withTrashed()->max('id') + 1;
+        $last = Student::withTrashed()->count() + 1;
         return 'S' . str_pad($last, 3, '0', STR_PAD_LEFT);
     }
 }

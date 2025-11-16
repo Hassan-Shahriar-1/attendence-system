@@ -19,12 +19,12 @@ class AttendanceService
         }
 
         // Chunk to avoid memory issues
-        collect($attendanceData)->chunk(500)->each(function ($chunk) use ($recordedBy) {
-            $records = $chunk->map(fn($data) => [
-                'student_id' => $data['student_id'],
-                'date' => $data['date'],
-                'status' => $data['status'],
-                'note' => $data['note'] ?? null,
+        collect($attendanceData['student_ids'])->chunk(500)->each(function ($chunk) use ($recordedBy, $attendanceData) {
+            $records = $chunk->map(fn($studentID) => [
+                'student_id' => $studentID,
+                'date' => $attendanceData['date'],
+                'status' => $attendanceData['status'],
+                'note' => $attendanceData['note'] ?? null,
                 'recorded_by' => $recordedBy,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -37,12 +37,6 @@ class AttendanceService
                 ['status', 'note', 'recorded_by', 'updated_at']
             );
         });
-
-        // Fire one event for all bulk insert
-        event(new AttendanceBulkRecorded($attendanceData));
-
-        // Clear relevant Redis cache
-        Cache::tags(['attendance'])->flush();
     }
 
     /**

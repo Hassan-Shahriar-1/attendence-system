@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendences', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->unsignedBigInteger('student_id');
-            $table->timestamp('date');
-            $table->string('status');
-            $table->string('note')->nullable();
-            $table->unsignedBigInteger('recorded_by');
+        Schema::create('attendances', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->date('date');
+            $table->enum('status', ['present', 'absent', 'late']);
+            $table->text('note')->nullable();
+            $table->foreignId('recorded_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
+
+            // This ensures only one attendance per student per day
+            $table->unique(['student_id', 'date']);
         });
     }
 
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendences');
+        Schema::dropIfExists('attendances');
     }
 };

@@ -1,0 +1,25 @@
+<template>
+	<svg
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<g id="logout-02">
+			<path
+				id="Vector"
+				d="M11 3L10.3374 3.23384C7.75867 4.144 6.46928 4.59908 5.73464 5.63742C5 6.67576 5 8.0431 5 10.7778V13.2222C5 15.9569 5 17.3242 5.73464 18.3626C6.46928 19.4009 7.75867 19.856 10.3374 20.7662L11 21"
+				stroke="#EDFAF7"
+				stroke-linecap="round"
+			/>
+			<path
+				id="Vector_2"
+				d="M21 12H11M21 12C21 11.2998 19.0057 9.99153 18.5 9.5M21 12C21 12.7002 19.0057 14.0085 18.5 14.5"
+				stroke="#EDFAF7"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+		</g>
+	</svg>
+</template>

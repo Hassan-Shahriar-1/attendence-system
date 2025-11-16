@@ -3,13 +3,45 @@ import { UserStore } from "../stores/UserStore";
 
 const Dashboard = () => import("../Pages/Dashboard.vue");
 const NotFound = () => import("../Pages/NotFound.vue"); // 404 page
+const AuthenticatedLayout = () => import("../Layouts/AuthenticatedLayout.vue");
+const Studentlist = () => import("../Pages/Students/Studentlist.vue");
+
 
 const routes = [
     {
         path: "/",
-        name: "Dashboard",
-        component: Dashboard,           // use the lazy loader function directly
-        meta: { requiresAuth: true },   // mark as protected
+        component: AuthenticatedLayout,
+        meta: { requiresAuth: true },   
+        children: [
+             {
+                path: "",
+                redirect: { name: "Dashboard" }, // Redirect root path to "dashboard"
+            },
+            {
+                path: "dashboard",
+                component:  Dashboard,
+                name: "Dashboard",
+                meta: {
+                requiresAuth: true,
+                },
+            },
+            {
+                path: "students",
+                component:  Dashboard,
+                name: "Students",
+                meta: {
+                requiresAuth: true,
+                },
+            },
+            {
+                path: "attendance",
+                component:  Dashboard,
+                name: "Attendance",
+                meta: {
+                requiresAuth: true,
+                },
+            },
+        ],
     },
     {
         path: "/login",

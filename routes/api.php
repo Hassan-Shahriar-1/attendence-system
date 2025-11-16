@@ -15,6 +15,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('sections', SectionController::class)->except('show');
     Route::apiResource('grades', GradeController::class)->except('show');
     Route::apiResource('students', StudentController::class);

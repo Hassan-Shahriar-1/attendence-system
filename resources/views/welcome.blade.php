@@ -21,6 +21,6 @@
 
 <script>
     window.App = {
-        url: '{{ env("APP_URL") }}/admin'
+        url: '{{ env("APP_URL") }}/api'
     };
 </script>

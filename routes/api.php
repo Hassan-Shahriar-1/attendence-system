@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Grade\GradeController;
 use App\Http\Controllers\Section\SectionController;
 use App\Http\Controllers\Student\StudentController;
@@ -17,4 +18,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('sections', SectionController::class)->except('show');
     Route::apiResource('grades', GradeController::class)->except('show');
     Route::apiResource('students', StudentController::class);
+    Route::post('bulk-attendance', [AttendanceController::class, 'bulkAttendance']);
 });

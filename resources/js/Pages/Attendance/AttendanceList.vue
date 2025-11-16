@@ -25,12 +25,13 @@
     </div>
 
     <!-- Bulk Actions -->
-    <div v-if="students.length > 0" class="flex gap-3 items-center">
+    <div v-if="students.length > 0" class="flex gap-3 items-center bg-white shadow rounded-lg p-4">
       <span class="font-semibold text-gray-700">Bulk Action:</span>
-      <button class="btn present" @click="applyBulk('Present')">Mark All Present</button>
-      <button class="btn absent" @click="applyBulk('Absent')">Mark All Absent</button>
-      <button class="btn late" @click="applyBulk('Late')">Mark All Late</button>
+      <button class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition" @click="applyBulk('present')">Mark All Present</button>
+      <button class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition" @click="applyBulk('absent')">Mark All Absent</button>
+      <button class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition" @click="applyBulk('late')">Mark All Late</button>
     </div>
+      
 
     <!-- Student List -->
     <div v-if="students.length > 0" class="bg-white shadow rounded-xl p-4 mt-4">
@@ -55,9 +56,9 @@
 
             <td class="p-3">
               <select v-model="student.status" class="input w-40">
-                <option value="Present">Present</option>
-                <option value="Late">Late</option>
-                <option value="Absent">Absent</option>
+                <option value="present">Present</option>
+                <option value="late">Late</option>
+                <option value="absent">Absent</option>
               </select>
             </td>
           </tr>
@@ -67,14 +68,17 @@
 
     <!-- Submit Button -->
     <div v-if="students.length > 0" class="text-right mt-4">
-      <button class="btn primary" @click="submitAttendance">Submit Attendance</button>
+      <button class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition" @click="submitAttendance">Submit Attendance</button>
     </div>
+      
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import axios from '@/axios' 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const classes = ref([])
 const sections = ref([])
@@ -99,10 +103,10 @@ const loadSections = async () => {
 
 const loadStudents = async () => {
   if (!selectedSection.value) return
-  const res = await axios.get(`/grades/${selectedClass.value}/sections/${selectedSection.value}/students`)
+  const res = await axios.get(`/grades/${selectedClass.value}/sections/${selectedSection.value}/students`,{ params: { date: attendanceDate.value } })
   students.value = res.data.data.map(s => ({
     ...s,
-    status: 'Present' // default status
+    status: s.status || 'present' // default status
   }))
 }
 
@@ -121,9 +125,18 @@ const submitAttendance = async () => {
     }))
   }
 
-  await axios.post('/attendance', payload)
+  await axios.post('/bulk-attendance', payload)
 
-  alert('Attendance Submitted!')
+  toast('Attendance Submitted!', {
+    type: 'success',
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
 }
 
 loadClasses()

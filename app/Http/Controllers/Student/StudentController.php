@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Student;
 
-use App\Helpers\ApiResponseHelper;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Student\CreateStudentRequest;
-use App\Http\Requests\Student\UpdateStudentRequest;
-use App\Http\Resources\Student\StudentResource;
 use App\Models\Student;
 use App\Services\StudentService;
+use App\Helpers\ApiResponseHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Student\StudentResource;
+use App\Http\Requests\Student\CreateStudentRequest;
+use App\Http\Requests\Student\UpdateStudentRequest;
+use App\Http\Resources\Student\AttendanceStudentResource;
 
 class StudentController extends Controller
 {
@@ -50,9 +51,16 @@ class StudentController extends Controller
 
     public function getStudentsByGradeSection($gradeId, $sectionId)
     {
+        $date = request('date', now()->format('Y-m-d'));
+
         $students = Student::where('grade_id', $gradeId)
             ->where('section_id', $sectionId)
+            ->with(['attendances' => function ($q) use ($date) {
+                $q->where('date', $date)->select('student_id', 'status', 'note');
+            }])
             ->get();
-        return ApiResponseHelper::successResponse(StudentResource::collection($students));
+
+
+        return ApiResponseHelper::successResponse(AttendanceStudentResource::collection($students));
     }
 }

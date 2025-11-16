@@ -15,6 +15,7 @@ class AttendanceController extends Controller
     public function bulkAttendance(BulkAttendenceRequest $request)
     {
         $attendanceData = $request->validated();
+
         $this->attendanceService->recordBulk($attendanceData, Auth::id());
         return ApiResponseHelper::successResponse([], false, 'completed');
     }

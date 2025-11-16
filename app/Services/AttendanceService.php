@@ -16,32 +16,34 @@ class AttendanceService
     /**
      * Bulk record attendance (PostgreSQL optimized)
      */
-    public function recordBulk(array $attendanceData, int $recordedBy)
+    public function recordBulk(array $data, int $recordedBy)
     {
-        if (empty($attendanceData)) {
+        if (empty($data['records'])) {
             return;
         }
 
-        // Chunk to avoid memory issues
-        collect($attendanceData['student_ids'])->chunk(500)->each(function ($chunk) use ($recordedBy, $attendanceData) {
-            $records = $chunk->map(fn($studentID) => [
-                'student_id' => $studentID,
-                'date' => $attendanceData['date'],
-                'status' => $attendanceData['status'],
-                'note' => $attendanceData['note'] ?? null,
-                'recorded_by' => $recordedBy,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ])->toArray();
+        collect($data['records'])->chunk(500)->each(function ($chunk) use ($data, $recordedBy) {
 
-            // PostgreSQL UPSERT using Eloquent
+            $records = $chunk->map(function ($row) use ($data, $recordedBy) {
+                return [
+                    'student_id'  => $row['student_id'],
+                    'date'        => $data['date'],
+                    'status'      => $row['status'],
+                    'note'        => $row['note'] ?? null,
+                    'recorded_by' => $recordedBy,
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ];
+            })->toArray();
+
             Attendance::upsert(
                 $records,
-                ['student_id', 'date'], // unique keys
+                ['student_id', 'date'],
                 ['status', 'note', 'recorded_by', 'updated_at']
             );
         });
     }
+
 
     /**
      * Get monthly report for a grade

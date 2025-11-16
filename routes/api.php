@@ -20,7 +20,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('grades', GradeController::class)->except('show');
     Route::get('grades/{grade}/sections', [SectionController::class, 'getSectionsByGrade']);
     Route::apiResource('students', StudentController::class);
-    Route::get('grade/{grade}/sections/{section}/students', [StudentController::class, 'getStudentsByGradeSection']);
+    Route::get('grades/{grade}/sections/{section}/students', [StudentController::class, 'getStudentsByGradeSection']);
     Route::post('bulk-attendance', [AttendanceController::class, 'bulkAttendance']);
     Route::get('get-monthly-report', [AttendanceController::class, 'getMonthlyAttendanceReport']);
     Route::get('today-report', [AttendanceController::class, 'getTodayAttendanceReport']);

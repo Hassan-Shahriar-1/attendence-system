@@ -1,24 +1,21 @@
 <template>
-	<div class="relative">
+	<div :class="show ? 'relative':''">
 		<div
-			class="h-[52px] px-4 py-3 bg-white shadow justify-start items-center gap-2.5 inline-flex cursor-pointer"
+			class="h-[36px] px-2 py-3 bg-white justify-start items-center gap-2.5 inline-flex cursor-pointer rounded-md outline outline-1 outline-offset-[-1px] outline-[#e0e2e5]"
 			@click="show = !show"
 		>
-			<div class="w-6 h-6 relative">
-				<SettingsIcon />
-			</div>
+			Filter
 		</div>
 		<div
 			v-if="show"
-			class="w-[385px] max-h-[450px] overflow-auto px-6 py-7 bg-white shadow flex-col justify-start items-start gap-6 inline-flex absolute top-[120%] left-0 z-10"
+			class="w-[385px] px-6 py-7 bg-white shadow flex-col justify-start items-start gap-6 inline-flex absolute top-[120%] left-0 z-10"
 		>
-			<CrossIcon class="cursor-pointer absolute right-8" @click="show = false" />
 			<slot></slot>
 			<div class="self-stretch justify-end items-center gap-3.5 inline-flex">
-				<div class="w-[85px] h-[38px] p-4 bg-[#ededed] justify-center items-center gap-2.5 flex cursor-pointer" @click="resetFilters">
+				<div class="min-w-[85px] h-[38px] p-4 bg-[#ededed] justify-center items-center gap-2.5 flex cursor-pointer" @click="resetFilters">
 					<div class="text-center text-[#454545] text-sm font-extrabold leading-[16.80px]">{{ $t('Reset') }}</div>
 				</div>
-				<div class="w-[87px] h-[38px] p-4 bg-primary justify-center items-center gap-2.5 flex cursor-pointer hover:bg-primary-hover" @click="applyFilter">
+				<div class="min-w-[87px] h-[38px] p-4 bg-[#00a280] justify-center items-center gap-2.5 flex cursor-pointer hover:bg-primary-hover" @click="applyFilter">
 					<div class="text-center text-white text-sm font-extrabold leading-[16.80px]">{{ $t('Apply') }}</div>
 				</div>
 			</div>
@@ -28,8 +25,8 @@
 
 <script setup>
 import { ref } from "vue";
-import SettingsIcon from "@/components/icons/SettingsIcon.vue";
-import CrossIcon from "@/components/icons/CrossIcon3.vue";
+// import FilterIcon from "@icons/FilterIcon.vue";
+// import CrossIcon from "@icons/CrossIcon3.vue";
 
 const emit = defineEmits(["apply", "reset"]);
 

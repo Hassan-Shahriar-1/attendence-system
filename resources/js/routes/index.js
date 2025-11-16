@@ -27,7 +27,7 @@ const routes = [
             },
             {
                 path: "students",
-                component:  Dashboard,
+                component:  Studentlist,
                 name: "Students",
                 meta: {
                 requiresAuth: true,

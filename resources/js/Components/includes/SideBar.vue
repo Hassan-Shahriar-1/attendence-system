@@ -2,7 +2,7 @@
 	<div class="bg-gray-800 relative min-w-[280px] max-w-[280px]">
 		<div class="flex-col justify-start items-center flex pt-5 relative">
 						
-			<div class="flex flex-col gap-[12px] pl-2 w-[90%]">
+			<div class="flex flex-col gap-[12px] pl-2 w-[90%] pt-12">
 				<template v-for="(tab, index) in tabs" :key="index">
 					<router-link
 						:to="tab.route"
@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="flex-col items-center flex gap-4 absolute bottom-5 px-5 w-full">
-			<div class="w-full h-px bg-[#600B1E] my-3"></div>
+			<div class="w-full h-px bg-white my-3"></div>
 			<div class="flex justify-between items-center">
 				<div class="flex items-center cursor-pointer order-first" @click="handleLogout">
 					<LogoutIcon
@@ -35,8 +35,6 @@
 						@mouseover="hoverLogout = true"
 						@mouseleave="hoverLogout = false"
 					/>
-				
-					
 				</div>
 			</div>
 		</div>
@@ -49,8 +47,7 @@ import { useRoute } from "vue-router";
 
 import DashboardIcon from "@/Components/icons/DashboardIcon.vue";
 import LogoutIcon from "@/Components/icons/LogoutIcon.vue";
-import axios from "axios";
-
+import axios from "@/axios";
 const activeTab = ref(0);
 const hoveredIndex = ref(null);
 const hoverLogout = ref(false);
@@ -92,7 +89,7 @@ onMounted(() => {
 });
 
 const handleLogout = async () => {
-	await axios.post("api/logout");
+	await axios.post("logout");
 	localStorage.clear();
 	window.location.href = "/login";
 };

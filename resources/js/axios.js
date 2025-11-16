@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 axios.defaults.headers = {
   'Access-Control-Allow-Origin': '*',
   Accept: 'application/json',
   'X-Value': true,
 };
-axios.defaults.baseURL = window.App.url;
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 // Request Interceptor
 axios.interceptors.request.use(
@@ -33,11 +32,7 @@ axios.interceptors.response.use(
     const currentRoute = window.location.pathname;
     if (error.response && [401].includes(error.response.status) && currentRoute !== '/login') {
       localStorage.removeItem('token');
-      const toast = toast();
-      toast.error('Your session has expired. Please log in again.', {
-        position: 'bottom-center',
-      });
-   
+         
       return (window.location = '/login');
     }
 
@@ -48,3 +43,5 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export default axios;

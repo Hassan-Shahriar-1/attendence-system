@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Events\AttendanceBulkRecorded;
 use App\Models\Student;
+use Illuminate\Support\Facades\Log;
+
+use function Laravel\Prompts\info;
 
 class AttendanceService
 {
@@ -47,7 +50,7 @@ class AttendanceService
     public function getMonthlyReport(int $gradeId, string $month)
     {
         $cacheKey = "attendance_report_{$gradeId}_{$month}";
-
+        Log::info('data', [Cache::get($cacheKey)]);
         return Cache::tags(['attendance'])->remember($cacheKey, 3600, function () use ($gradeId, $month) {
             return Attendance::select(
                 'student_id',
@@ -64,25 +67,11 @@ class AttendanceService
         });
     }
 
-    /**
-     * Get attendance statistics for a student
-     */
-    public function getStats(int $studentId)
-    {
-        return Cache::tags(['attendance'])->remember("attendance_stats_{$studentId}", 3600, function () use ($studentId) {
-            return Attendance::where('student_id', $studentId)
-                ->selectRaw('status, COUNT(*) AS count')
-                ->groupBy('status')
-                ->pluck('count', 'status')
-                ->toArray();
-        });
-    }
-
     public function dateWiseReport(string $date)
     {
         $totalStudents = Student::count();
 
-        $attendanceStats = \App\Models\Attendance::selectRaw("
+        $attendanceStats = Attendance::selectRaw("
             COUNT(*) FILTER (WHERE status = 'present' OR status = 'late') AS present_count,
             COUNT(*) FILTER (WHERE status = 'late') AS late_count,
             COUNT(*) FILTER (WHERE status = 'absent') AS absent_count

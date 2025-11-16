@@ -17,7 +17,8 @@ class StudentObserver
     public function creating(Student $student): void
     {
         if (!$student->student_id) {
-            $student->student_id = $this->generateStudentId();
+            $lastId = Student::withTrashed()->max('id') + 1;
+            $student->student_id = 'S' . str_pad($lastId, 3, '0', STR_PAD_LEFT);
         }
     }
 
@@ -51,21 +52,5 @@ class StudentObserver
     public function forceDeleted(Student $student): void
     {
         //
-    }
-
-    public function generateStudentId()
-    {
-        // Get the last student ID
-        $lastStudent = Student::orderBy('id', 'desc')->first();
-
-        if (!$lastStudent || !$lastStudent->student_id) {
-            return 'S001';
-        }
-
-        $number = (int) str_replace('S', '', $lastStudent->student_id);
-        $number++;
-
-        // Format with leading zeros
-        return 'S' . str_pad($number, 3, '0', STR_PAD_LEFT);
     }
 }

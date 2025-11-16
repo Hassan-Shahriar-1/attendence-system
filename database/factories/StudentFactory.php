@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Grade;
 use App\Models\Section;
-use App\Services\StudentService;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,12 +19,18 @@ class StudentFactory extends Factory
      */
     public function definition(): array
     {
-        $studentService = new StudentService;
         return [
             'name'       => $this->faker->name(),
+            'student_id' => $this->generateStudentId(),
             'grade_id'   => Grade::inRandomOrder()->first()?->id ?? 1,
             'section_id' => Section::inRandomOrder()->first()?->id ?? 1,
             'image'      => null,
         ];
+    }
+
+    public function generateStudentId(): string
+    {
+        $last = Student::withTrashed()->max('id') + 1;
+        return 'S' . str_pad($last, 3, '0', STR_PAD_LEFT);
     }
 }

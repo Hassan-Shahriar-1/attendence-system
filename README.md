@@ -18,7 +18,8 @@ copy .env.example to .env file
    ```
 2. Build and run the Docker containers:
    ```bash
-  
+   docker compose up --build -d
+  ```
   # After containers are up, run the following:
   
   # Enter PHP container and install PHP dependencies
